@@ -1,9 +1,10 @@
 import rootReducer from "./store/reducers/rootReducer";
 import { persistStore } from "redux-persist";
-import { createStore } from "redux";
+import { createStore, applyMiddleware } from "redux";
+import thunk from 'redux-thunk'
 
 const reduxStore = () => {
-    const store = createStore(rootReducer)//sẽ thêm middleware
+    const store = createStore(rootReducer, applyMiddleware(thunk))//sẽ thêm middleware
     const persistor = persistStore(store)
 
     return { store, persistor }
