@@ -28,7 +28,6 @@ const Login = () => {
     }, [isLoggedIn])
 
     const handleSubmit = async () => {
-        // console.log(payload);
         let finalPayload = isRegister ? payload : {
             phone: payload.phone,
             password: payload.password
