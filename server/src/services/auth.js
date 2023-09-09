@@ -20,7 +20,7 @@ export const registerService = ({ phone, password, name }) => new Promise(async 
         const token = response[1] && jwt.sign({ id: response[0].id, phone: response[0].phone }, process.env.SECRET_KEY, { expiresIn: '2d' })
         resolve({
             err: token ? 0 : 2,
-            mgs: token ? 'Register is successfully!' : 'Phone number has been already used!',
+            msg: token ? 'Register is successfully!' : 'Phone number has been already used!',
             token: token || null
         })
     } catch (error) {
@@ -38,7 +38,7 @@ export const loginService = ({ phone, password }) => new Promise(async (resolve,
         const token = isCorrectPassword && jwt.sign({ id: response.id, phone: response.phone }, process.env.SECRET_KEY, { expiresIn: '2d' })
         resolve({
             err: token ? 0 : 2,
-            mgs: token ? 'Login is successfully!' : response ? 'Password is not correct!' : 'Phone number not found!',
+            msg: token ? 'Login is successfully!' : response ? 'Password is not correct!' : 'Phone number not found!',
             token: token || null
         })
     } catch (error) {
