@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th9 09, 2023 lúc 08:57 AM
+-- Thời gian đã tạo: Th9 09, 2023 lúc 10:31 AM
 -- Phiên bản máy phục vụ: 10.4.24-MariaDB
 -- Phiên bản PHP: 8.1.6
 
@@ -126,10 +126,10 @@ INSERT INTO `attributes` (`id`, `price`, `acreage`, `published`, `hashtag`, `cre
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `categorys`
+-- Cấu trúc bảng cho bảng `categories`
 --
 
-CREATE TABLE `categorys` (
+CREATE TABLE `categories` (
   `id` int(11) NOT NULL,
   `code` varchar(255) DEFAULT NULL,
   `value` varchar(255) DEFAULT NULL,
@@ -140,14 +140,14 @@ CREATE TABLE `categorys` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Đang đổ dữ liệu cho bảng `categorys`
+-- Đang đổ dữ liệu cho bảng `categories`
 --
 
-INSERT INTO `categorys` (`id`, `code`, `value`, `header`, `subheader`, `createdAt`, `updatedAt`) VALUES
-(1, 'CTCH', 'Cho thuê căn hộ', 'Cho Thuê Căn Hộ Chung Cư, Giá Rẻ, Mới Nhất 2023', 'Cho thuê căn hộ - Kênh đăng tin cho thuê căn hộ số 1: giá rẻ, chính chủ, đầy đủ tiện nghi. Cho thuê chung cư với nhiều mức giá, diện tích cho thuê khác nhau.', '2023-09-09 13:56:14', '2023-09-09 13:56:14'),
-(2, 'CTMB', 'Cho thuê mặt bằng', 'Cho Thuê Mặt Bằng, Văn Phòng Kinh Doanh, Giá Rẻ, Mới Nhất 2023', 'Có 2.848 tin đăng cho thuê mặt bằng, văn phòng kinh doanh. Giá rẻ, gần chợ, trường học, tiện mở quán ăn, cafe. Đăng tin mặt bằng, văn phòng hiệu quả tại Phongtro123.com', '2023-09-09 13:56:14', '2023-09-09 13:56:14'),
-(3, 'CTPT', 'Cho thuê phòng trọ', 'Cho Thuê Phòng Trọ, Giá Rẻ, Tiện Nghi, Mới Nhất 2023', 'Cho thuê phòng trọ - Kênh thông tin số 1 về phòng trọ giá rẻ, phòng trọ sinh viên, phòng trọ cao cấp mới nhất năm 2023. Tất cả nhà trọ cho thuê giá tốt nhất tại Việt Nam.', '2023-09-09 13:56:14', '2023-09-09 13:56:14'),
-(4, 'NCT', 'Nhà cho thuê', 'Cho Thuê Nhà Nguyên Căn, Giá Rẻ, Chính Chủ, Mới Nhất 2023', 'Cho thuê nhà nguyên căn - Kênh đăng tin cho thuê nhà số 1: giá rẻ, chính chủ, miễn trung gian, đầy đủ tiện nghi, mức giá, diện tích cho thuê khác nhau.', '2023-09-09 13:56:14', '2023-09-09 13:56:14');
+INSERT INTO `categories` (`id`, `code`, `value`, `header`, `subheader`, `createdAt`, `updatedAt`) VALUES
+(1, 'CTCH', 'Cho thuê căn hộ', 'Cho Thuê Căn Hộ Chung Cư, Giá Rẻ, Mới Nhất 2023', 'Cho thuê căn hộ - Kênh đăng tin cho thuê căn hộ số 1: giá rẻ, chính chủ, đầy đủ tiện nghi. Cho thuê chung cư với nhiều mức giá, diện tích cho thuê khác nhau.', '2023-09-09 15:30:34', '2023-09-09 15:30:34'),
+(2, 'CTMB', 'Cho thuê mặt bằng', 'Cho Thuê Mặt Bằng, Văn Phòng Kinh Doanh, Giá Rẻ, Mới Nhất 2023', 'Có 2.848 tin đăng cho thuê mặt bằng, văn phòng kinh doanh. Giá rẻ, gần chợ, trường học, tiện mở quán ăn, cafe. Đăng tin mặt bằng, văn phòng hiệu quả tại Phongtro123.com', '2023-09-09 15:30:34', '2023-09-09 15:30:34'),
+(3, 'CTPT', 'Cho thuê phòng trọ', 'Cho Thuê Phòng Trọ, Giá Rẻ, Tiện Nghi, Mới Nhất 2023', 'Cho thuê phòng trọ - Kênh thông tin số 1 về phòng trọ giá rẻ, phòng trọ sinh viên, phòng trọ cao cấp mới nhất năm 2023. Tất cả nhà trọ cho thuê giá tốt nhất tại Việt Nam.', '2023-09-09 15:30:34', '2023-09-09 15:30:34'),
+(4, 'NCT', 'Nhà cho thuê', 'Cho Thuê Nhà Nguyên Căn, Giá Rẻ, Chính Chủ, Mới Nhất 2023', 'Cho thuê nhà nguyên căn - Kênh đăng tin cho thuê nhà số 1: giá rẻ, chính chủ, miễn trung gian, đầy đủ tiện nghi, mức giá, diện tích cho thuê khác nhau.', '2023-09-09 15:30:34', '2023-09-09 15:30:34');
 
 -- --------------------------------------------------------
 
@@ -685,6 +685,7 @@ INSERT INTO `users` (`id`, `name`, `password`, `phone`, `zalo`, `createdAt`, `up
 ('f835c801-8739-4d00-bee1-a67684fff917', 'Kim Thoa', '$2a$12$4MLSgcKC39WSJZV1vL3nZeM/W67Gn/8g3mPwh1ub8sw5CDykYxK6K', '0332299893', '0332299893', '2023-09-06 01:27:49', '2023-09-06 01:27:49'),
 ('f836b390-6c52-4de5-b743-68407794ec82', 'NGUYỄN THỊ TUYẾT HƯƠNG', '$2a$12$HraTDVrCYoaNsv.mN7eFYuidxSLVB1QqwYDupguxCqZ6J14TzVY.u', '0906022702', '0906022702', '2023-09-06 01:27:47', '2023-09-06 01:27:47'),
 ('f90282a8-5d8d-4026-9653-c5a3e53c100e', 'chị Điệp', '$2a$12$/ILTr9Yum8hE7uZ.soYzPeGS0DwSK68FdaYu3GAq9FyWwi6p7hsQu', '0917419105', '0917419105', '2023-09-06 01:42:01', '2023-09-06 01:42:01'),
+('fb28ee9b-32d7-49fc-806b-d77d1aa7e0fe', 'Chung', '$2a$12$QmKM/70pIvEj/CEgdMJCXeG76693B/mOaje4YxPSO5kjN3qPN4kZe', '1234567', NULL, '2023-09-09 07:23:50', '2023-09-09 07:23:50'),
 ('fe3a8523-5499-4741-acc2-acba4d825eec', 'Trang Hồng Ân', '$2a$12$IQttjBYXBQW91Y/nKXFzXO7byZYRT1gV3J/ghylD7GSkUDnXhCRhK', '0918527989', '0918527989', '2023-09-06 01:41:05', '2023-09-06 01:41:05');
 
 --
@@ -698,9 +699,9 @@ ALTER TABLE `attributes`
   ADD PRIMARY KEY (`id`);
 
 --
--- Chỉ mục cho bảng `categorys`
+-- Chỉ mục cho bảng `categories`
 --
-ALTER TABLE `categorys`
+ALTER TABLE `categories`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -745,9 +746,9 @@ ALTER TABLE `users`
 --
 
 --
--- AUTO_INCREMENT cho bảng `categorys`
+-- AUTO_INCREMENT cho bảng `categories`
 --
-ALTER TABLE `categorys`
+ALTER TABLE `categories`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --

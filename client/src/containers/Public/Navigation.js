@@ -1,27 +1,43 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
+import { apiGetCategories } from '../../services/category'
+import { formatVietnameseToString } from '../../ultils/constant'
 
-const nav = [{ name: "Trang chủ", path: 'home' },
-{ name: "Cho thuê phòng trọ", path: 'cho-thue-phong-tro' },
-{ name: "Nhà cho thuê", path: 'nha-cho thue' },
-{ name: "Cho thuê căn hộ", path: 'cho-thue-can-ho' },
-{ name: "Cho thuê mặt bằng", path: 'cho-thue-mat-bang' }]
 
 const notActive = 'hover:bg-secondary2 bg-secondary1 px-4 h-full flex items-center'
 const active = 'hover:bg-secondary2 bg-secondary2 px-4 h-full flex items-center'
 
 const Navigation = () => {
+
+    const [categories, setCategories] = useState([])
+
+    useEffect(() => {
+        const fecthCategories = async () => {
+            const response = await apiGetCategories()
+            if (response?.data.err === 0) {
+                setCategories(response.data.response)
+            }
+        }
+        fecthCategories()
+    }, [])
+
     return (
         <div className='w-full flex items-center justify-center h-10 bg-secondary1 text-white'>
             <div className='w-1100 flex items-center h-full text-sm font-medium'>
-                {nav?.length > 0 && nav.map((item, index) => {
+                <NavLink
+                    to={'/'}
+                    className={({ isActive }) => isActive ? active : notActive}
+                >
+                    Trang chủ
+                </NavLink>
+                {categories?.length > 0 && categories.map(item => {
                     return (
-                        <div key={index} className='h-full flex items-center justify-center'>
+                        <div key={item.code} className='h-full flex items-center justify-center'>
                             <NavLink
-                                to={item.path}
+                                to={`${formatVietnameseToString(item.value)}`}
                                 className={({ isActive }) => isActive ? active : notActive}
                             >
-                                {item.name}
+                                {item.value}
                             </NavLink>
                         </div>
                     )
