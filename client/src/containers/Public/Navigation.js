@@ -23,7 +23,7 @@ const Navigation = () => {
 
     return (
         <div className='w-full flex items-center justify-center h-10 bg-secondary1 text-white'>
-            <div className='w-1100 flex items-center h-full text-sm font-medium'>
+            <div className='w-3/5 flex items-center h-full text-sm font-medium'>
                 <NavLink
                     to={'/'}
                     className={({ isActive }) => isActive ? active : notActive}
