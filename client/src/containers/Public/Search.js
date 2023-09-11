@@ -11,7 +11,7 @@ const { GrNext,
 
 const Search = () => {
     return (
-        <div className='p-[10px] bg-[#febb02] rounded-lg flex flex-col lg:flex-row items-center justify-around gap-2'>
+        <div className='p-[10px] w-3/5 bg-[#febb02] rounded-lg flex flex-col lg:flex-row items-center justify-around gap-2'>
             <SearchItem iconBefore={<BsBuilding />} iconAfter={<GrNext color='rgb(156, 163, 175)' />} text='Phòng trọ, nhà trọ' fontWeight />
             <SearchItem iconBefore={<CiLocationOn />} iconAfter={<GrNext color='rgb(156, 163, 175)' />} text='Toàn quốc' />
             <SearchItem iconBefore={<TbReportMoney />} iconAfter={<GrNext color='rgb(156, 163, 175)' />} text='Chọn giá' />
