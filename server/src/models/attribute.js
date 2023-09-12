@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            Attribute.hasOne(models.Post, { foreignKey: 'attributeId', as: 'attributes' })
         }
     }
     Attribute.init({

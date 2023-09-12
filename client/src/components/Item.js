@@ -1,26 +1,33 @@
-import React, { memo } from 'react'
+import React, { memo, useState } from 'react'
 import icons from '../ultils/icons'
 
-const images = [
-    "https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/08/30/e1ff0d06dbad09f350bc_1693359997.jpg",
-    "https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/08/30/279a6494b13f63613a2e_1693359996.jpg",
-    "https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/08/30/78d8fdf6285dfa03a34c_1693359989.jpg",
-    "https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/08/30/4a5f4d4098eb4ab513fa_1693359991.jpg",
-]
+const indexs = [0, 1, 2, 3]
 
 const { GrStar,
     AiFillHeart,
     AiOutlineHeart,
     BsFillBookmarkStarFill } = icons
 
-const Item = () => {
+const Item = ({ images, user, title, star, description, attributes, address }) => {
+
+    const [isHoverHeart, setIsHoverHeart] = useState(false)
+
     return (
-        <div className='w-full flex border-t border-orange-600 p-1'>
-            <div className='w-2/5 flex flex-wrap gap-[2px] items-center'>
-                <img src={images[0]} alt="preview" className='w-[120px] h-[120px] object-cover' />
-                <img src={images[1]} alt="preview" className='w-[120px] h-[120px] object-cover' />
-                <img src={images[2]} alt="preview" className='w-[120px] h-[120px] object-cover' />
-                <img src={images[3]} alt="preview" className='w-[120px] h-[120px] object-cover' />
+        <div className='w-full flex border-t border-orange-600 py-2'>
+            <div className='w-2/5 flex flex-wrap gap-[2px] items-center relative cursor-pointer'>
+                {images.length > 0 && images.filter((i, index) => indexs.some(i => i === index))?.map((i, index) => {
+                    return (
+                        <img key={index} src={i} alt="preview" className='w-[110px] h-[140px] object-cover' />
+                    )
+                })}
+                <span className='bg-overlay-70 text-white px-2 rounded-md text-sm absolute bottom-2 left-1'>{`${images.length} ảnh`}</span>
+                <span
+                    className='text-white text-sm absolute bottom-2 right-4'
+                    onMouseEnter={() => setIsHoverHeart(true)}
+                    onMouseLeave={() => setIsHoverHeart(false)}
+                >
+                    {!isHoverHeart ? <AiOutlineHeart size={24} /> : <AiFillHeart size={24} color='red' />}
+                </span>
             </div>
             <div className='w-3/5 pl-2'>
                 <div className='flex justify-between gap-4 w-full'>
@@ -30,31 +37,31 @@ const Item = () => {
                         <GrStar className='star-item' size={18} color='yellow' />
                         <GrStar className='star-item' size={18} color='yellow' />
                         <GrStar className='star-item' size={18} color='yellow' />
-                        Cho thuê căn hộ mini mới xây đầy đủ tiện nghi sát bến xe miền tây
+                        {title}
                     </div>
                     <div className='w-[10%] flex justify-end'>
                         <BsFillBookmarkStarFill size={24} color='orange' />
                     </div>
                 </div>
                 <div className='my-2 flex items-center justify-between text-sm'>
-                    <span className='font-bold text-green-600'>5.5 triệu/tháng</span>
-                    <span>24m2</span>
-                    <span>Quận Bình Tân, Hồ Chí Minh</span>
+                    <span className='font-bold text-green-600'>{attributes?.price}</span>
+                    <span>{attributes?.acreage}</span>
+                    <span>{address}</span>
                 </div>
-                <p className='text-gray-500'>
-                    Nhà mới xây xong trang bị đầy đủ tiện nghi, mỗi phòng đều có máy lạnh,máy giặt,ti vi và ban công phơi đồ riêng, chỗ để xe rộng rãi. Ngay chợ, bến…
+                <p className='text-gray-500 w-full h-[75px] text-ellipsis overflow-hidden'>
+                    {description}
                 </p>
                 <div className='flex items-center my-5 justify-between'>
                     <div className='flex items-center'>
                         <img src="https://anubis.gr/wp-content/uploads/2018/03/no-avatar.png" alt="avatar" className='w-[30px] h-[30px] object-cover rounded-full' />
-                        <p>Tinh Tan</p>
+                        <p>{user?.name}</p>
                     </div>
                     <div className='flex items-center gap-1'>
                         <button
                             type='button'
                             className='bg-blue-700 text-white px-1 rounded-md'
                         >
-                            Gọi 0913261071
+                            {`Gọi ${user?.phone}`}
                         </button>
                         <button
                             type='button'
