@@ -1,5 +1,5 @@
 import { AiOutlinePlusCircle, AiOutlineHeart, AiFillHeart } from 'react-icons/ai'
-import { GrNext, GrStar, GrLinkNext } from 'react-icons/gr'
+import { GrNext, GrStar, GrLinkNext, GrLinkPrevious } from 'react-icons/gr'
 import { BsBuilding, BsSearch, BsFillBookmarkStarFill } from 'react-icons/bs'
 import { CiLocationOn } from 'react-icons/ci'
 import { LiaCropSolid } from 'react-icons/lia'
@@ -19,7 +19,8 @@ const icons = {
     AiFillHeart,
     AiOutlineHeart,
     BsFillBookmarkStarFill,
-    GrLinkNext
+    GrLinkNext,
+    GrLinkPrevious
 }
 
 export default icons

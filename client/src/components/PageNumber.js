@@ -1,25 +1,31 @@
 import React, { memo } from 'react'
 import { createSearchParams, useNavigate } from 'react-router-dom'
 
-const PageNumber = ({ number }) => {
+const notActive = 'w-[46px] h-[48px] flex justify-center items-center bg-white hover:bg-gray-300 rounded-md'
+const active = 'w-[46px] h-[48px] flex justify-center items-center bg-secondary2 hover:opacity-90 rounded-md cursor-pointer text-white'
+
+const PageNumber = ({ text, currentPage, icon, setCurrentPage }) => {
 
     const navigate = useNavigate()
 
     const handleChangePage = () => {
-        navigate({
-            pathname: "/",
-            search: createSearchParams({
-                page: number
-            }).toString()
-        })
+        if (!(text === '...')) {
+            setCurrentPage(+text)
+            navigate({
+                pathname: "/",
+                search: createSearchParams({
+                    page: text
+                }).toString()
+            })
+        }
     }
 
     return (
         <div
-            className='px-5 py-3 bg-white hover:bg-gray-300 rounded-md cursor-pointer'
+            className={+text === +currentPage ? active : `${notActive} ${text === '...' ? 'cursor-default' : 'cursor-pointer'}`}
             onClick={handleChangePage}
         >
-            {number}
+            {icon || text}
         </div>
     )
 }

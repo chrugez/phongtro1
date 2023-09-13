@@ -18,8 +18,9 @@ const HomePage = () => {
             <Province />
             <div className='w-full flex gap-4'>
                 <div className='w-[70%]'>
-                    <List />
-                    <Pagination />
+                    <List page={params.get('page')} />
+                    <Pagination page={params.get('page')} />
+                    <div className='h-[500px]'></div>
                 </div>
                 <div className='w-[30%] border border-green-600'>
                     SideBar
