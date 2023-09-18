@@ -3,6 +3,8 @@ import bcrypt from 'bcryptjs'
 import { v4 } from 'uuid'
 import chothuephongtro from '../../data/chothuephongtro.json'
 import generateCode from '../ultis/generateCode'
+import { dataPrice, dataArea } from '../ultis/data'
+import { getNumberFromString } from '../ultis/common'
 require('dotenv').config()
 
 const dataBody = chothuephongtro.body
@@ -18,6 +20,9 @@ export const insertService = () => new Promise(async (resolve, reject) => {
             let userId = v4()
             let imagesId = v4()
             let overviewId = v4()
+            let desc = JSON.stringify(item?.mainContent?.content)
+            let currentArea = getNumberFromString(item?.header?.attributes?.acreage)
+            let currentPrice = getNumberFromString(item?.header?.attributes?.price)
             await db.Post.create({
                 id: postId,
                 title: item?.header?.title,
@@ -26,10 +31,12 @@ export const insertService = () => new Promise(async (resolve, reject) => {
                 address: item?.header?.address,
                 attributeId,
                 categoryCode: 'CTPT',
-                description: JSON.stringify(item?.mainContent?.content),
+                description: desc,
                 userId,
                 overviewId,
-                imagesId
+                imagesId,
+                areaCode: dataArea.find(area => area.max >= currentArea && area.min <= currentArea)?.code,
+                priceCode: dataPrice.find(price => price.max >= currentPrice && price.min <= currentPrice)?.code,
             })
             await db.Attribute.create({
                 id: attributeId,
@@ -74,3 +81,4 @@ export const insertService = () => new Promise(async (resolve, reject) => {
         reject(error)
     }
 })
+
