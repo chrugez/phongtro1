@@ -2,12 +2,13 @@ import db from '../models'
 import bcrypt from 'bcryptjs'
 import { v4 } from 'uuid'
 import chothuephongtro from '../../data/chothuephongtro.json'
+import nhachothue from '../../data/nhachothue.json'
 import generateCode from '../ultis/generateCode'
 import { dataPrice, dataArea } from '../ultis/data'
 import { getNumberFromString } from '../ultis/common'
 require('dotenv').config()
 
-const dataBody = chothuephongtro.body
+const dataBody = nhachothue.body
 
 const hashPassword = password => bcrypt.hashSync(password, bcrypt.genSaltSync(12))
 
@@ -30,7 +31,7 @@ export const insertService = () => new Promise(async (resolve, reject) => {
                 labelCode,
                 address: item?.header?.address,
                 attributeId,
-                categoryCode: 'CTPT',
+                categoryCode: 'NCT',
                 description: desc,
                 userId,
                 overviewId,
@@ -82,3 +83,24 @@ export const insertService = () => new Promise(async (resolve, reject) => {
     }
 })
 
+export const createPriceAndArea = () => new Promise((resolve, reject) => {
+    try {
+        dataPrice.forEach(async (item, index) => {
+            await db.Price.create({
+                code: item.code,
+                value: item.value,
+                order: index + 1,
+            })
+        })
+        dataArea.forEach(async (item, index) => {
+            await db.Area.create({
+                code: item.code,
+                value: item.value,
+                order: index + 1,
+            })
+        })
+        resolve('OK')
+    } catch (error) {
+        reject(error)
+    }
+})

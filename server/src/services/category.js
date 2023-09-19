@@ -13,6 +13,6 @@ export const getCategoriesService = () => new Promise(async (resolve, reject) =>
             response
         })
     } catch (error) {
-        reject()
+        reject(error)
     }
 })
