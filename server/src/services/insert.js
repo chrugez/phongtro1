@@ -8,7 +8,7 @@ import { dataPrice, dataArea } from '../ultis/data'
 import { getNumberFromString } from '../ultis/common'
 require('dotenv').config()
 
-const dataBody = nhachothue.body
+const dataBody = chothuephongtro.body
 
 const hashPassword = password => bcrypt.hashSync(password, bcrypt.genSaltSync(12))
 
@@ -31,13 +31,13 @@ export const insertService = () => new Promise(async (resolve, reject) => {
                 labelCode,
                 address: item?.header?.address,
                 attributeId,
-                categoryCode: 'NCT',
+                categoryCode: 'CTPT',
                 description: desc,
                 userId,
                 overviewId,
                 imagesId,
-                areaCode: dataArea.find(area => area.max >= currentArea && area.min <= currentArea)?.code,
-                priceCode: dataPrice.find(price => price.max >= currentPrice && price.min <= currentPrice)?.code,
+                areaCode: dataArea.find(area => area.max > currentArea && area.min <= currentArea)?.code,
+                priceCode: dataPrice.find(price => price.max > currentPrice && price.min <= currentPrice)?.code,
             })
             await db.Attribute.create({
                 id: attributeId,
