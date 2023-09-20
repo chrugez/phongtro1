@@ -1,6 +1,7 @@
 import actionTypes from "../actions/actionTypes";
 const initState = {
     posts: [],
+    newPosts: [],
     msg: '',
     count: 0
 }
@@ -15,7 +16,12 @@ const postReducer = (state = initState, action) => {
                 msg: action.msg || '',
                 count: action.count || 0
             }
-
+        case actionTypes.GET_NEW_POST:
+            return {
+                ...state,
+                newPosts: action.newPosts || [],
+                msg: action.msg || '',
+            }
         default:
             return state;
     }
