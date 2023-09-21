@@ -1,9 +1,23 @@
-import React, { memo } from 'react'
+import React, { memo, useState, useEffect } from 'react'
 import icons from '../ultils/icons'
 
 const { GrLinkPrevious } = icons
 
 const Modal = ({ setIsShowModal, content, name }) => {
+
+    const [percent1, setPercent1] = useState(0)
+    const [percent2, setPercent2] = useState(100)
+
+    useEffect(() => {
+        const activedTrackEl = document.getElementById('track-active')
+        activedTrackEl.style.left = `${percent1}%`
+    }, [percent1])
+
+    useEffect(() => {
+        const activedTrackEl = document.getElementById('track-active')
+        activedTrackEl.style.right = `${100 - percent2}%`
+    }, [percent2])
+
     return (
         <div
             onClick={() => {
@@ -29,7 +43,7 @@ const Modal = ({ setIsShowModal, content, name }) => {
                         <GrLinkPrevious size={24} />
                     </span>
                 </div>
-                <div className='p-4 flex flex-col'>
+                {(name === 'category' || name === 'province') && <div className='p-4 flex flex-col'>
                     {content?.map(item => {
                         return (
                             <span key={item.code} className='py-2 flex gap-2 items-center border-b border-gray-300'>
@@ -38,7 +52,29 @@ const Modal = ({ setIsShowModal, content, name }) => {
                             </span>
                         )
                     })}
-                </div>
+                </div>}
+                {(name === 'price' || name === 'area') && <div className='p-12'>
+                    <div className='flex flex-col items-center justify-center relative'>
+                        <div className='slider-track h-[5px] bg-gray-300 absolute top-0 bottom-0 w-full rounded-full'></div>
+                        <div id='track-active' className='slider-track-active h-[5px] bg-orange-600 absolute top-0 bottom-0 rounded-full'></div>
+                        <input
+                            max='100'
+                            min='0'
+                            step='5'
+                            type="range"
+                            value={percent1}
+                            className='w-full appearance-none pointer-events-none absolute top-0 bottom-0'
+                            onChange={(e) => setPercent1(e.target.value)} />
+                        <input
+                            max='100'
+                            min='0'
+                            step='5'
+                            type="range"
+                            value={percent2}
+                            className='w-full appearance-none pointer-events-none absolute top-0 bottom-0'
+                            onChange={(e) => setPercent2(e.target.value)} />
+                    </div>
+                </div>}
             </div>
         </div>
     )
