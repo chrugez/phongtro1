@@ -10,13 +10,25 @@ const Modal = ({ setIsShowModal, content, name }) => {
 
     useEffect(() => {
         const activedTrackEl = document.getElementById('track-active')
-        activedTrackEl.style.left = `${percent1}%`
-    }, [percent1])
+        if (percent2 <= percent1) {
+            activedTrackEl.style.left = `${percent2}%`
+            activedTrackEl.style.right = `${100 - percent1}%`
+        } else {
+            activedTrackEl.style.left = `${percent1}%`
+            activedTrackEl.style.right = `${100 - percent2}%`
+        }
+    }, [percent1, percent2])
 
-    useEffect(() => {
-        const activedTrackEl = document.getElementById('track-active')
-        activedTrackEl.style.right = `${100 - percent2}%`
-    }, [percent2])
+    const handleClickStack = (e) => {
+        const stackEl = document.getElementById('track')
+        const stackRect = stackEl.getBoundingClientRect()
+        let percent = Math.round((e.clientX - stackRect.left) * 100 / stackRect.width)
+        if (Math.abs(percent - percent1) <= (Math.abs(percent - percent2))) {
+            setPercent1(percent)
+        } else {
+            setPercent2(percent)
+        }
+    }
 
     return (
         <div
@@ -55,8 +67,8 @@ const Modal = ({ setIsShowModal, content, name }) => {
                 </div>}
                 {(name === 'price' || name === 'area') && <div className='p-12'>
                     <div className='flex flex-col items-center justify-center relative'>
-                        <div className='slider-track h-[5px] bg-gray-300 absolute top-0 bottom-0 w-full rounded-full'></div>
-                        <div id='track-active' className='slider-track-active h-[5px] bg-orange-600 absolute top-0 bottom-0 rounded-full'></div>
+                        <div onClick={handleClickStack} id='track' className='slider-track h-[5px] bg-gray-300 absolute top-0 bottom-0 w-full rounded-full'></div>
+                        <div onClick={handleClickStack} id='track-active' className='slider-track-active h-[5px] bg-orange-600 absolute top-0 bottom-0 rounded-full'></div>
                         <input
                             max='100'
                             min='0'
@@ -64,7 +76,7 @@ const Modal = ({ setIsShowModal, content, name }) => {
                             type="range"
                             value={percent1}
                             className='w-full appearance-none pointer-events-none absolute top-0 bottom-0'
-                            onChange={(e) => setPercent1(e.target.value)} />
+                            onChange={(e) => setPercent1(+e.target.value)} />
                         <input
                             max='100'
                             min='0'
@@ -72,7 +84,7 @@ const Modal = ({ setIsShowModal, content, name }) => {
                             type="range"
                             value={percent2}
                             className='w-full appearance-none pointer-events-none absolute top-0 bottom-0'
-                            onChange={(e) => setPercent2(e.target.value)} />
+                            onChange={(e) => setPercent2(+e.target.value)} />
                     </div>
                 </div>}
             </div>
