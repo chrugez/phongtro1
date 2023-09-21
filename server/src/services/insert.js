@@ -1,6 +1,8 @@
 import db from '../models'
 import bcrypt from 'bcryptjs'
 import { v4 } from 'uuid'
+import chothuematbang from '../../data/chothuematbang.json'
+import chothuecanho from '../../data/chothuecanho.json'
 import chothuephongtro from '../../data/chothuephongtro.json'
 import nhachothue from '../../data/nhachothue.json'
 import generateCode from '../ultis/generateCode'
@@ -8,7 +10,7 @@ import { dataPrice, dataArea } from '../ultis/data'
 import { getNumberFromString } from '../ultis/common'
 require('dotenv').config()
 
-const dataBody = nhachothue.body
+const dataBody = chothuematbang.body
 
 const hashPassword = password => bcrypt.hashSync(password, bcrypt.genSaltSync(12))
 
@@ -31,7 +33,7 @@ export const insertService = () => new Promise(async (resolve, reject) => {
                 labelCode,
                 address: item?.header?.address,
                 attributeId,
-                categoryCode: 'NCT',
+                categoryCode: 'CTMB',
                 description: desc,
                 userId,
                 overviewId,
