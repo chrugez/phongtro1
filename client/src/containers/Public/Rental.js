@@ -5,7 +5,7 @@ import { useLocation, useSearchParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { formatVietnameseToString } from '../../ultils/Common/formatVietnameseToString'
 
-const RentalApartment = () => {
+const Rental = () => {
 
     const [params] = useSearchParams()
     const { prices, areas, categories } = useSelector(state => state.app)
@@ -45,4 +45,4 @@ const RentalApartment = () => {
     )
 }
 
-export default RentalApartment
+export default Rental

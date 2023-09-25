@@ -5,11 +5,18 @@ import { getCodesPrices, getCodesAreas } from '../ultils/Common/getCodes'
 
 const { GrLinkPrevious } = icons
 
-const Modal = ({ setIsShowModal, content, name, handleSubmit, queries, arrMinMax }) => {
-    console.log(arrMinMax);
+const Modal = ({ setIsShowModal, content, name, handleSubmit, queries, arrMinMax, defaultText }) => {
 
-    const [percent1, setPercent1] = useState(name === 'price' ? arrMinMax?.priceArr[0] : name === 'area' ? arrMinMax?.areaArr[0] : 0)
-    const [percent2, setPercent2] = useState(name === 'price' ? arrMinMax?.priceArr[1] : name === 'area' ? arrMinMax?.areaArr[1] : 100)
+    const [percent1, setPercent1] = useState(name === 'price' && arrMinMax?.priceArr
+        ? arrMinMax?.priceArr[0]
+        : name === 'area' && arrMinMax?.areaArr
+            ? arrMinMax?.areaArr[0]
+            : 0)
+    const [percent2, setPercent2] = useState(name === 'price' && arrMinMax?.priceArr
+        ? arrMinMax?.priceArr[1]
+        : name === 'area' && arrMinMax?.areaArr
+            ? arrMinMax?.areaArr[1]
+            : 100)
     const [activeEl, setActiveEl] = useState('')
 
     useEffect(() => {
@@ -73,18 +80,21 @@ const Modal = ({ setIsShowModal, content, name, handleSubmit, queries, arrMinMax
     }
 
     const handleBeforeSubmit = (e) => {
+        let min = percent1 <= percent2 ? percent1 : percent2
+        let max = percent1 >= percent2 ? percent1 : percent2
+        let arrMinMax = [convert100ToTarget(min), convert100ToTarget(max)]
         const gaps = name === 'price'
-            ? getCodesPrices([convert100ToTarget(percent1), convert100ToTarget(percent2)], content)
-            : name === 'price'
-                ? getCodesAreas([convert100ToTarget(percent1), convert100ToTarget(percent2)], content)
+            ? getCodesPrices(arrMinMax, content)
+            : name === 'area'
+                ? getCodesAreas(arrMinMax, content)
                 : []
         handleSubmit(e, {
             [`${name}Code`]: gaps?.map(item => item.code),
-            [name]: `Từ ${convert100ToTarget(percent1)} - ${convert100ToTarget(percent2)} ${name === 'price'
+            [name]: `Từ ${convert100ToTarget(min)} - ${convert100ToTarget(max)} ${name === 'price'
                 ? 'triệu'
                 : 'm2'}`
         }, {
-            [`${name}Arr`]: [percent1, percent2]
+            [`${name}Arr`]: [min, max]
         })
     }
 
@@ -100,7 +110,7 @@ const Modal = ({ setIsShowModal, content, name, handleSubmit, queries, arrMinMax
                     e.stopPropagation()
                     setIsShowModal(true)
                 }}
-                className='w-3/5 bg-white rounded-md'
+                className='w-3/5 h-[500px] relative bg-white rounded-md'
             >
                 <div className='h-[45px] flex items-center px-4 border-b border-gray-200'>
                     <span
@@ -114,6 +124,16 @@ const Modal = ({ setIsShowModal, content, name, handleSubmit, queries, arrMinMax
                     </span>
                 </div>
                 {(name === 'category' || name === 'province') && <div className='p-4 flex flex-col'>
+                    <span className='py-2 flex gap-2 items-center border-b border-gray-300'>
+                        <input
+                            type="radio"
+                            name={name}
+                            id='default'
+                            value={defaultText || ''}
+                            defaultChecked={!queries[`${name}Code`] ? true : false}
+                            onClick={(e) => handleSubmit(e, { [name]: defaultText, [`${name}Code`]: null })} />
+                        <label htmlFor='default'>{defaultText}</label>
+                    </span>
                     {content?.map(item => {
                         return (
                             <span key={item?.code} className='py-2 flex gap-2 items-center border-b border-gray-300'>
@@ -204,7 +224,7 @@ const Modal = ({ setIsShowModal, content, name, handleSubmit, queries, arrMinMax
                 </div>}
                 {(name === 'price' || name === 'area') && <button
                     type='button'
-                    className='w-full bg-orange-400 py-2 font-medium rounded-b-md uppercase'
+                    className='w-full absolute bottom-0 bg-orange-400 py-2 font-medium rounded-b-md uppercase'
                     onClick={handleBeforeSubmit}
                 >
                     Áp dụng
