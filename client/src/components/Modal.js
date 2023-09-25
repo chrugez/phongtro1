@@ -1,13 +1,15 @@
 import React, { memo, useState, useEffect } from 'react'
 import icons from '../ultils/icons'
 import { getNumbersPrice, getNumbersArea } from '../ultils/Common/getNumbers'
+import { getCodesPrices, getCodesAreas } from '../ultils/Common/getCodes'
 
 const { GrLinkPrevious } = icons
 
-const Modal = ({ setIsShowModal, content, name, handleSubmit, queries }) => {
+const Modal = ({ setIsShowModal, content, name, handleSubmit, queries, arrMinMax }) => {
+    console.log(arrMinMax);
 
-    const [percent1, setPercent1] = useState(0)
-    const [percent2, setPercent2] = useState(100)
+    const [percent1, setPercent1] = useState(name === 'price' ? arrMinMax?.priceArr[0] : name === 'area' ? arrMinMax?.areaArr[0] : 0)
+    const [percent2, setPercent2] = useState(name === 'price' ? arrMinMax?.priceArr[1] : name === 'area' ? arrMinMax?.areaArr[1] : 100)
     const [activeEl, setActiveEl] = useState('')
 
     useEffect(() => {
@@ -70,6 +72,21 @@ const Modal = ({ setIsShowModal, content, name, handleSubmit, queries }) => {
         }
     }
 
+    const handleBeforeSubmit = (e) => {
+        const gaps = name === 'price'
+            ? getCodesPrices([convert100ToTarget(percent1), convert100ToTarget(percent2)], content)
+            : name === 'price'
+                ? getCodesAreas([convert100ToTarget(percent1), convert100ToTarget(percent2)], content)
+                : []
+        handleSubmit(e, {
+            [`${name}Code`]: gaps?.map(item => item.code),
+            [name]: `Từ ${convert100ToTarget(percent1)} - ${convert100ToTarget(percent2)} ${name === 'price'
+                ? 'triệu'
+                : 'm2'}`
+        }, {
+            [`${name}Arr`]: [percent1, percent2]
+        })
+    }
 
     return (
         <div
@@ -105,7 +122,7 @@ const Modal = ({ setIsShowModal, content, name, handleSubmit, queries }) => {
                                     name={name}
                                     id={item?.code}
                                     value={item?.code}
-                                    checked={item.code === queries[`${name}Code`] ? true : false}
+                                    defaultChecked={item.code === queries[`${name}Code`] ? true : false}
                                     onClick={(e) => handleSubmit(e, { [name]: item.value, [`${name}Code`]: item.code })} />
                                 <label htmlFor={item?.code}>{item?.value}</label>
                             </span>
@@ -188,7 +205,7 @@ const Modal = ({ setIsShowModal, content, name, handleSubmit, queries }) => {
                 {(name === 'price' || name === 'area') && <button
                     type='button'
                     className='w-full bg-orange-400 py-2 font-medium rounded-b-md uppercase'
-                // onClick={handleSubmit}
+                    onClick={handleBeforeSubmit}
                 >
                     Áp dụng
                 </button>}

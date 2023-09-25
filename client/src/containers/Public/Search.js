@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react'
 import { Modal, SearchItem } from '../../components'
 import icons from '../../ultils/icons'
 import { useSelector } from 'react-redux'
-import { getCodeArea, getCodePrice } from '../../ultils/Common/getCodes'
+import { getCodesAreas, getCodesPrices } from '../../ultils/Common/getCodes'
 
 const { GrNext,
     BsBuilding,
@@ -18,8 +18,7 @@ const Search = () => {
     const [name, setName] = useState()
     const { provinces, areas, prices, categories } = useSelector(state => state.app)
     const [queries, setQueries] = useState({})
-    console.log(getCodeArea(areas));
-    console.log(getCodePrice(prices));
+    const [arrMinMax, setArrMinMax] = useState({})
 
     const handleShowModal = (content, name) => {
         setContent(content)
@@ -27,10 +26,11 @@ const Search = () => {
         setName(name)
     }
 
-    const handleSubmit = useCallback((e, query) => {
+    const handleSubmit = useCallback((e, query, arrMinMax) => {
         e.stopPropagation()
         setQueries(pre => ({ ...pre, ...query }))
         setIsShowModal(false)
+        arrMinMax && setArrMinMax(pre => ({ ...pre, ...arrMinMax }))
     }, [isShowModal, queries])
     console.log(queries);
 
@@ -69,7 +69,7 @@ const Search = () => {
                     Tìm kiếm
                 </button>
             </div>
-            {isShowModal && <Modal handleSubmit={handleSubmit} content={content} queries={queries} name={name} setIsShowModal={setIsShowModal} />}
+            {isShowModal && <Modal handleSubmit={handleSubmit} content={content} arrMinMax={arrMinMax} queries={queries} name={name} setIsShowModal={setIsShowModal} />}
         </>
     )
 }
