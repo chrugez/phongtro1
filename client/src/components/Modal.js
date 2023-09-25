@@ -1,9 +1,10 @@
 import React, { memo, useState, useEffect } from 'react'
 import icons from '../ultils/icons'
+import { getNumbersPrice, getNumbersArea } from '../ultils/Common/getNumbers'
 
 const { GrLinkPrevious } = icons
 
-const Modal = ({ setIsShowModal, content, name }) => {
+const Modal = ({ setIsShowModal, content, name, handleSubmit, queries }) => {
 
     const [percent1, setPercent1] = useState(0)
     const [percent2, setPercent2] = useState(100)
@@ -40,24 +41,23 @@ const Modal = ({ setIsShowModal, content, name }) => {
                 ? Math.ceil(Math.round((percent * 0.9) / 5) * 5)
                 : 0
     }
-    const convert15to100 = percent => {
+    const convertTo100 = percent => {
         let target = name === 'price' ? 15 : name = 'area' ? 90 : 0
         return Math.floor((percent / target) * 100)
     }
-    const getNumbers = string => string.split(' ').map(item => +item).filter(item => !item === false)
-    const getNumbersArea = string => string.split(' ').map(item => +item.match(/\d+/)).filter(item => item !== 0)
+
 
     const handleActice = (code, value) => {
         setActiveEl(code)
-        let arrMaxMin = name === 'price' ? getNumbers(value) : getNumbersArea(value)
+        let arrMaxMin = name === 'price' ? getNumbersPrice(value) : getNumbersArea(value)
         if (arrMaxMin.length === 1) {
             if (arrMaxMin[0] === 1) {
                 setPercent1(0)
-                setPercent2(convert15to100(1))
+                setPercent2(convertTo100(1))
             }
             if (arrMaxMin[0] === 20) {
                 setPercent1(0)
-                setPercent2(convert15to100(20))
+                setPercent2(convertTo100(20))
             }
             if (arrMaxMin[0] === 15 || arrMaxMin[0] === 90) {
                 setPercent1(100)
@@ -65,14 +65,11 @@ const Modal = ({ setIsShowModal, content, name }) => {
             }
         }
         if (arrMaxMin.length === 2) {
-            setPercent1(convert15to100(arrMaxMin[0]))
-            setPercent2(convert15to100(arrMaxMin[1]))
+            setPercent1(convertTo100(arrMaxMin[0]))
+            setPercent2(convertTo100(arrMaxMin[1]))
         }
     }
-    const handleSubmit = () => {
-        console.log('start', convert100ToTarget(percent1));
-        console.log('end', convert100ToTarget(percent2));
-    }
+
 
     return (
         <div
@@ -103,7 +100,13 @@ const Modal = ({ setIsShowModal, content, name }) => {
                     {content?.map(item => {
                         return (
                             <span key={item?.code} className='py-2 flex gap-2 items-center border-b border-gray-300'>
-                                <input type="radio" name={name} id={item?.code} value={item?.code} />
+                                <input
+                                    type="radio"
+                                    name={name}
+                                    id={item?.code}
+                                    value={item?.code}
+                                    checked={item.code === queries[`${name}Code`] ? true : false}
+                                    onClick={(e) => handleSubmit(e, { [name]: item.value, [`${name}Code`]: item.code })} />
                                 <label htmlFor={item?.code}>{item?.value}</label>
                             </span>
                         )
@@ -112,7 +115,15 @@ const Modal = ({ setIsShowModal, content, name }) => {
                 {(name === 'price' || name === 'area') && <div className='p-12 py-20'>
                     <div className='flex flex-col items-center justify-center relative'>
                         <div className='absolute z-30 top-[-48px] font-bold text-xl text-orange-600'>
-                            {`Từ ${percent1 <= percent2 ? convert100ToTarget(percent1) : convert100ToTarget(percent2)} - ${percent2 >= percent1 ? convert100ToTarget(percent2) : convert100ToTarget(percent1)} ${name === 'price' ? 'triệu' : 'm2'}`}
+                            {(percent1 === 100 && percent2 === 100)
+                                ? `Trên ${convert100ToTarget(percent1)} ${name === 'price' ? 'triệu' : 'm2'} +`
+                                : `Từ ${percent1 <= percent2
+                                    ? convert100ToTarget(percent1)
+                                    : convert100ToTarget(percent2)} - ${percent2 >= percent1
+                                        ? convert100ToTarget(percent2)
+                                        : convert100ToTarget(percent1)} ${name === 'price'
+                                            ? 'triệu'
+                                            : 'm2'}`}
                         </div>
                         <div onClick={handleClickStack} id='track' className='slider-track h-[5px] bg-gray-300 absolute top-0 bottom-0 w-full rounded-full'></div>
                         <div onClick={handleClickStack} id='track-active' className='slider-track-active h-[5px] bg-orange-600 absolute top-0 bottom-0 rounded-full'></div>
@@ -177,7 +188,7 @@ const Modal = ({ setIsShowModal, content, name }) => {
                 {(name === 'price' || name === 'area') && <button
                     type='button'
                     className='w-full bg-orange-400 py-2 font-medium rounded-b-md uppercase'
-                    onClick={handleSubmit}
+                // onClick={handleSubmit}
                 >
                     Áp dụng
                 </button>}

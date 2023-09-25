@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Modal, SearchItem } from '../../components'
 import icons from '../../ultils/icons'
 import { useSelector } from 'react-redux'
+import { getCodeArea, getCodePrice } from '../../ultils/Common/getCodes'
 
 const { GrNext,
     BsBuilding,
@@ -16,12 +17,22 @@ const Search = () => {
     const [content, setContent] = useState([])
     const [name, setName] = useState()
     const { provinces, areas, prices, categories } = useSelector(state => state.app)
+    const [queries, setQueries] = useState({})
+    console.log(getCodeArea(areas));
+    console.log(getCodePrice(prices));
 
     const handleShowModal = (content, name) => {
         setContent(content)
         setIsShowModal(true)
         setName(name)
     }
+
+    const handleSubmit = useCallback((e, query) => {
+        e.stopPropagation()
+        setQueries(pre => ({ ...pre, ...query }))
+        setIsShowModal(false)
+    }, [isShowModal, queries])
+    console.log(queries);
 
     return (
         <>
@@ -30,25 +41,25 @@ const Search = () => {
                     onClick={() => handleShowModal(categories, 'category')}
                     className='w-full cursor-pointer'
                 >
-                    <SearchItem iconBefore={<BsBuilding />} iconAfter={<GrNext color='rgb(156, 163, 175)' />} text='Phòng trọ, nhà trọ' fontWeight />
+                    <SearchItem iconBefore={<BsBuilding />} iconAfter={<GrNext color='rgb(156, 163, 175)' />} text={queries.category} defaultText={'Phòng trọ, nhà trọ'} fontWeight />
                 </span>
                 <span
                     onClick={() => handleShowModal(provinces, 'province')}
                     className='w-full cursor-pointer'
                 >
-                    <SearchItem iconBefore={<CiLocationOn />} iconAfter={<GrNext color='rgb(156, 163, 175)' />} text='Toàn quốc' />
+                    <SearchItem iconBefore={<CiLocationOn />} iconAfter={<GrNext color='rgb(156, 163, 175)' />} text={queries.province} defaultText={'Toàn quốc'} />
                 </span>
                 <span
                     onClick={() => handleShowModal(prices, 'price')}
                     className='w-full cursor-pointer'
                 >
-                    <SearchItem iconBefore={<TbReportMoney />} iconAfter={<GrNext color='rgb(156, 163, 175)' />} text='Chọn giá' />
+                    <SearchItem iconBefore={<TbReportMoney />} iconAfter={<GrNext color='rgb(156, 163, 175)' />} text={queries.price} defaultText={'Chọn giá'} />
                 </span>
                 <span
                     onClick={() => handleShowModal(areas, 'area')}
                     className='w-full cursor-pointer'
                 >
-                    <SearchItem iconBefore={<LiaCropSolid />} iconAfter={<GrNext color='rgb(156, 163, 175)' />} text='Chọn diện tích' />
+                    <SearchItem iconBefore={<LiaCropSolid />} iconAfter={<GrNext color='rgb(156, 163, 175)' />} text={queries.area} defaultText={'Chọn diện tích'} />
                 </span>
                 <button
                     type='button'
@@ -58,7 +69,7 @@ const Search = () => {
                     Tìm kiếm
                 </button>
             </div>
-            {isShowModal && <Modal content={content} name={name} setIsShowModal={setIsShowModal} />}
+            {isShowModal && <Modal handleSubmit={handleSubmit} content={content} queries={queries} name={name} setIsShowModal={setIsShowModal} />}
         </>
     )
 }
