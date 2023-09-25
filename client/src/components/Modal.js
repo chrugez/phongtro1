@@ -33,19 +33,33 @@ const Modal = ({ setIsShowModal, content, name }) => {
         }
     }
 
-    const convert100to15 = percent => Math.ceil(Math.round((percent * 1.5) / 5) * 5) / 10
-    const convert15to100 = percent => Math.floor((percent / 15) * 100)
+    const convert100ToTarget = percent => {
+        return name === 'price'
+            ? Math.ceil(Math.round((percent * 1.5) / 5) * 5) / 10
+            : name === 'area'
+                ? Math.ceil(Math.round((percent * 0.9) / 5) * 5)
+                : 0
+    }
+    const convert15to100 = percent => {
+        let target = name === 'price' ? 15 : name = 'area' ? 90 : 0
+        return Math.floor((percent / target) * 100)
+    }
     const getNumbers = string => string.split(' ').map(item => +item).filter(item => !item === false)
+    const getNumbersArea = string => string.split(' ').map(item => +item.match(/\d+/)).filter(item => item !== 0)
 
-    const handlePrice = (code, value) => {
+    const handleActice = (code, value) => {
         setActiveEl(code)
-        let arrMaxMin = getNumbers(value)
+        let arrMaxMin = name === 'price' ? getNumbers(value) : getNumbersArea(value)
         if (arrMaxMin.length === 1) {
             if (arrMaxMin[0] === 1) {
                 setPercent1(0)
                 setPercent2(convert15to100(1))
             }
-            if (arrMaxMin[0] === 15) {
+            if (arrMaxMin[0] === 20) {
+                setPercent1(0)
+                setPercent2(convert15to100(20))
+            }
+            if (arrMaxMin[0] === 15 || arrMaxMin[0] === 90) {
                 setPercent1(100)
                 setPercent2(100)
             }
@@ -56,8 +70,8 @@ const Modal = ({ setIsShowModal, content, name }) => {
         }
     }
     const handleSubmit = () => {
-        console.log('start', convert100to15(percent1));
-        console.log('end', convert100to15(percent2));
+        console.log('start', convert100ToTarget(percent1));
+        console.log('end', convert100ToTarget(percent2));
     }
 
     return (
@@ -98,7 +112,7 @@ const Modal = ({ setIsShowModal, content, name }) => {
                 {(name === 'price' || name === 'area') && <div className='p-12 py-20'>
                     <div className='flex flex-col items-center justify-center relative'>
                         <div className='absolute z-30 top-[-48px] font-bold text-xl text-orange-600'>
-                            {`Từ ${percent1 <= percent2 ? convert100to15(percent1) : convert100to15(percent2)} - ${percent2 >= percent1 ? convert100to15(percent2) : convert100to15(percent1)} triệu`}
+                            {`Từ ${percent1 <= percent2 ? convert100ToTarget(percent1) : convert100ToTarget(percent2)} - ${percent2 >= percent1 ? convert100ToTarget(percent2) : convert100ToTarget(percent1)} ${name === 'price' ? 'triệu' : 'm2'}`}
                         </div>
                         <div onClick={handleClickStack} id='track' className='slider-track h-[5px] bg-gray-300 absolute top-0 bottom-0 w-full rounded-full'></div>
                         <div onClick={handleClickStack} id='track-active' className='slider-track-active h-[5px] bg-orange-600 absolute top-0 bottom-0 rounded-full'></div>
@@ -139,7 +153,7 @@ const Modal = ({ setIsShowModal, content, name }) => {
                                     setPercent2(100)
                                 }}
                                 className='mr-[-15px] cursor-pointer'>
-                                15 triệu +
+                                {name === 'price' ? '15 triệu +' : '90'}
                             </span>
                         </div>
                     </div>
@@ -150,7 +164,7 @@ const Modal = ({ setIsShowModal, content, name }) => {
                                 return (
                                     <span
                                         key={item.code}
-                                        onClick={() => handlePrice(item.code, item.value)}
+                                        onClick={() => handleActice(item.code, item.value)}
                                         className={`px-4 py-2 bg-gray-200 rounded-md cursor-pointer ${item.code === activeEl ? 'bg-secondary1 text-white' : ''}`}
                                     >
                                         {item.value}
