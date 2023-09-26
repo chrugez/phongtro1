@@ -6,8 +6,9 @@ import { useNavigate, Link, useSearchParams } from 'react-router-dom'
 import { path } from '../../ultils/constant'
 import { useSelector, useDispatch } from 'react-redux'
 import * as actions from '../../store/actions'
+import menuManage from '../../ultils/menuManage'
 
-const { AiOutlinePlusCircle } = icons
+const { AiOutlinePlusCircle, MdOutlineLogout } = icons
 
 const Header = () => {
     const navigate = useNavigate()
@@ -15,6 +16,8 @@ const Header = () => {
     const [searchParams] = useSearchParams()
     const headerRef = useRef()
     const { isLoggedIn } = useSelector(state => state.auth)
+    const { currentData } = useSelector(state => state.user)
+    const [isShowMenu, setIsShowMenu] = useState(false)
 
     useEffect(() => {
         headerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -50,14 +53,39 @@ const Header = () => {
                             onClick={() => goLogin(true)}
                         />
                     </div>}
-                    {isLoggedIn && <div className='flex items-center gap-1'>
-                        <span className='text-sm hover:underline cursor-pointer'>Ten!</span>
+                    {isLoggedIn && <div className='flex items-center gap-1 relative'>
+                        <span className='text-sm hover:underline cursor-pointer'>{currentData.name}</span>
                         <Button
-                            text={'Đăng xuất'}
+                            text={'Quản lý tài khoản'}
                             textColor='text-white'
-                            bgColor='bg-red-700'
-                            onClick={() => dispatch(actions.logout())}
+                            bgColor='bg-blue-700'
+                            px='px-6'
+                            onClick={() => setIsShowMenu(prev => !prev)}
                         />
+                        {isShowMenu && <div className='absolute min-w-200 top-full right-0 bg-white shadow-md p-4 rounded-md flex flex-col'>
+                            {menuManage?.map(item => {
+                                return (
+                                    <Link
+                                        to={item?.path}
+                                        key={item.id}
+                                        className='border-b text-blue-600 py-2 flex items-center gap-1 border-gray-200 hover:text-orange-500'
+                                    >
+                                        {item?.icon}
+                                        {item.text}
+                                    </Link>
+                                )
+                            })}
+                            <span
+                                onClick={() => {
+                                    dispatch(actions.logout())
+                                    setIsShowMenu(false)
+                                }}
+                                className='text-blue-600 py-2 cursor-pointer flex gap-1 items-center hover:text-orange-500'
+                            >
+                                <MdOutlineLogout size={24} />
+                                Đăng Xuất
+                            </span>
+                        </div>}
                     </div>}
                     <Button
                         text={'Đăng tin mới'}

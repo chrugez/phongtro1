@@ -4,7 +4,6 @@ import { Outlet } from 'react-router-dom'
 import { Intro, Contact } from '../../components'
 import { useDispatch, useSelector } from 'react-redux'
 import * as actions from '../../store/actions'
-import { apiGetCurrent } from '../../services/user'
 
 const Home = () => {
 
@@ -12,18 +11,16 @@ const Home = () => {
     const { isLoggedIn } = useSelector(state => state.auth)
 
     useEffect(() => {
-        const fetchCurrent = async () => {
-            const respond = await apiGetCurrent()
-            console.log(respond);
-        }
-        isLoggedIn && fetchCurrent()
-    }, [isLoggedIn])
-
-    useEffect(() => {
         dispatch(actions.getPrices())
         dispatch(actions.getAreas())
         dispatch(actions.getProvinces())
     }, [])
+
+    useEffect(() => {
+        setTimeout(() => {
+            isLoggedIn && dispatch(actions.getCurrent())
+        }, 1000);
+    }, [isLoggedIn])
 
     return (
         <div className='w-full flex flex-col gap-6 items-center h-full'>
