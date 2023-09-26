@@ -28,7 +28,7 @@ const Item = ({ images, user, title, star, description, attributes, address, id 
             <Link to={`chi-tiet/${formatVietnameseToString(title)}/${id}`} className='w-2/5 flex flex-wrap gap-[2px] items-center relative cursor-pointer'>
                 {images.length > 0 && images.filter((i, index) => indexs.some(i => i === index))?.map((i, index) => {
                     return (
-                        <img key={index} src={i} alt="preview" className='w-[110px] h-[140px] object-cover' />
+                        <img key={index} src={i} alt="preview" className='w-[47%] h-[140px] object-cover' />
                     )
                 })}
                 <span className='bg-overlay-70 text-white px-2 rounded-md text-sm absolute bottom-2 left-1'>{`${images.length} ảnh`}</span>
