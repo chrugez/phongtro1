@@ -2,12 +2,22 @@ import React, { useEffect } from 'react'
 import { Header, Navigation, Search } from './'
 import { Outlet } from 'react-router-dom'
 import { Intro, Contact } from '../../components'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import * as actions from '../../store/actions'
+import { apiGetCurrent } from '../../services/user'
 
 const Home = () => {
 
     const dispatch = useDispatch()
+    const { isLoggedIn } = useSelector(state => state.auth)
+
+    useEffect(() => {
+        const fetchCurrent = async () => {
+            const respond = await apiGetCurrent()
+            console.log(respond);
+        }
+        isLoggedIn && fetchCurrent()
+    }, [isLoggedIn])
 
     useEffect(() => {
         dispatch(actions.getPrices())
@@ -19,7 +29,7 @@ const Home = () => {
         <div className='w-full flex flex-col gap-6 items-center h-full'>
             <Header />
             <Navigation />
-            <Search />
+            {isLoggedIn && <Search />}
             <div className='w-4/5 lg:w-3/5 flex flex-col items-start justify-start mt-3'>
                 <Outlet />
             </div>
