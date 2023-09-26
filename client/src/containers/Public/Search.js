@@ -1,9 +1,8 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Modal, SearchItem } from '../../components'
 import icons from '../../ultils/icons'
-import { useSelector, useDispatch } from 'react-redux'
-import { useNavigate, createSearchParams } from 'react-router-dom'
-import * as actions from '../../store/actions'
+import { useSelector } from 'react-redux'
+import { useNavigate, createSearchParams, useLocation } from 'react-router-dom'
 import { path } from '../../ultils/constant'
 
 const { GrNext,
@@ -15,7 +14,7 @@ const { GrNext,
 
 const Search = () => {
 
-    const dispatch = useDispatch()
+    const location = useLocation()
     const navigate = useNavigate()
     const [isShowModal, setIsShowModal] = useState(false)
     const [content, setContent] = useState([])
@@ -24,6 +23,13 @@ const Search = () => {
     const [queries, setQueries] = useState({})
     const [arrMinMax, setArrMinMax] = useState({})
     const [defaultText, setDefaultText] = useState('')
+
+    useEffect(() => {
+        if (!location.pathname.includes(path.SEARCH)) {
+            setArrMinMax({})
+            setQueries({})
+        }
+    }, [location])
 
     const handleShowModal = (content, name, defaultText) => {
         setContent(content)
@@ -46,10 +52,22 @@ const Search = () => {
         queryCodes.forEach(item => {
             queryCodesObj[item[0]] = item[1]
         })
+        const queryText = Object.entries(queries).filter(item => !item[0].includes('Code'))
+        let queryTextObj = {}
+        queryText.forEach(item => { queryTextObj[item[0]] = item[1] })
+        let titleSearch = `${queryTextObj.category
+            ? queryTextObj.category
+            : 'Cho thuê tất cả'} ${queryTextObj.province
+                ? queryTextObj.province
+                : ''} ${queryTextObj.price
+                    ? `giá ${queryTextObj.price}`
+                    : ''} ${queryTextObj.area
+                        ? `diện tích ${queryTextObj.area}` : ''}`
+        // console.log(titleSearch);
         navigate({
             pathname: path.SEARCH,
-            search: createSearchParams(queryCodesObj).toString()
-        })
+            search: createSearchParams(queryCodesObj).toString(),
+        }, { state: { titleSearch } })
     }
 
     return (
