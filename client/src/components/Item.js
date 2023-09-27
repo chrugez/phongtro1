@@ -2,6 +2,7 @@ import React, { memo, useState } from 'react'
 import icons from '../ultils/icons'
 import { useNavigate, Link } from 'react-router-dom'
 import { formatVietnameseToString } from '../ultils/Common/formatVietnameseToString'
+import noAvatar from '../assets/no-avatar.png'
 
 const indexs = [0, 1, 2, 3]
 
@@ -70,7 +71,7 @@ const Item = ({ images, user, title, star, description, attributes, address, id 
                 </p>
                 <div className='flex items-center my-5 justify-between'>
                     <div className='flex items-center'>
-                        <img src="https://anubis.gr/wp-content/uploads/2018/03/no-avatar.png" alt="avatar" className='w-[30px] h-[30px] object-cover rounded-full' />
+                        <img src={noAvatar} alt="avatar" className='w-[30px] h-[30px] object-cover rounded-full' />
                         <p>{user?.name}</p>
                     </div>
                     <div className='flex items-center gap-1'>

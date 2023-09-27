@@ -18,7 +18,7 @@ const Navigation = ({ isAdmin }) => {
     }, [])
 
     return (
-        <div className={`w-full flex ${isAdmin ? 'justify-start' : 'items-center'} h-10 bg-secondary1 text-white`}>
+        <div className={`w-full flex ${isAdmin ? 'justify-start' : 'justify-center'} items-center h-10 bg-secondary1 text-white`}>
             <div className='w-3/5 flex items-center h-full text-sm font-medium'>
                 <NavLink
                     to={'/'}
