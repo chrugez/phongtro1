@@ -8,7 +8,7 @@ import * as actions from '../../store/actions'
 const notActive = 'hover:bg-secondary2 bg-secondary1 px-4 h-full flex items-center'
 const active = 'hover:bg-secondary2 bg-secondary2 px-4 h-full flex items-center'
 
-const Navigation = () => {
+const Navigation = ({ isAdmin }) => {
 
     const dispatch = useDispatch()
     const { categories } = useSelector(state => state.app)
@@ -18,7 +18,7 @@ const Navigation = () => {
     }, [])
 
     return (
-        <div className='w-full flex items-center justify-center h-10 bg-secondary1 text-white'>
+        <div className={`w-full flex ${isAdmin ? 'justify-start' : 'items-center'} h-10 bg-secondary1 text-white`}>
             <div className='w-3/5 flex items-center h-full text-sm font-medium'>
                 <NavLink
                     to={'/'}
@@ -30,7 +30,7 @@ const Navigation = () => {
                     return (
                         <div key={item.code} className='h-full flex items-center justify-center'>
                             <NavLink
-                                to={`${formatVietnameseToString(item.value)}`}
+                                to={`/${formatVietnameseToString(item.value)}`}
                                 className={({ isActive }) => isActive ? active : notActive}
                             >
                                 {item.value}

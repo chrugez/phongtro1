@@ -6,19 +6,19 @@ const menuManage = [
     {
         id: 1,
         text: 'Đăng tin cho thuê',
-        path: '/system/create-new',
+        path: '/he-thong/tao-moi-bai-dang',
         icon: <TbPencilPlus size={24} />
     },
     {
         id: 2,
         text: 'Quản lý tin đăng',
-        path: '/system/manage-post',
+        path: '/he-thong/quan-ly-bai-dang',
         icon: <PiNotebookDuotone size={24} />
     },
     {
         id: 3,
         text: 'Thông tin tài khoản',
-        path: '/system/profile',
+        path: '/he-thong/thong-tin-tai-khoan',
         icon: <MdOutlineManageAccounts size={24} />
     },
 ]
