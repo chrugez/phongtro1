@@ -1,6 +1,6 @@
 import { AiOutlinePlusCircle, AiOutlineHeart, AiFillHeart, AiOutlineDown } from 'react-icons/ai'
 import { GrNext, GrStar, GrLinkNext, GrLinkPrevious } from 'react-icons/gr'
-import { BsBuilding, BsSearch, BsFillBookmarkStarFill } from 'react-icons/bs'
+import { BsBuilding, BsSearch, BsFillBookmarkStarFill, BsFillCameraFill } from 'react-icons/bs'
 import { CiLocationOn } from 'react-icons/ci'
 import { LiaCropSolid } from 'react-icons/lia'
 import { TbReportMoney, TbPencilPlus } from 'react-icons/tb'
@@ -27,7 +27,8 @@ const icons = {
     PiNotebookDuotone,
     MdOutlineManageAccounts,
     MdOutlineLogout,
-    AiOutlineDown
+    AiOutlineDown,
+    BsFillCameraFill
 }
 
 export default icons
