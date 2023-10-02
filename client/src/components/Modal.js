@@ -1,7 +1,6 @@
 import React, { memo, useState, useEffect } from 'react'
 import icons from '../ultils/icons'
 import { getNumbersPrice, getNumbersArea } from '../ultils/Common/getNumbers'
-import { getCodesPrices, getCodesAreas } from '../ultils/Common/getCodes'
 
 const { GrLinkPrevious } = icons
 
@@ -83,11 +82,7 @@ const Modal = ({ setIsShowModal, content, name, handleSubmit, queries, arrMinMax
         let min = percent1 <= percent2 ? percent1 : percent2
         let max = percent1 >= percent2 ? percent1 : percent2
         let arrMinMax = [convert100ToTarget(min), convert100ToTarget(max)]
-        // const gaps = name === 'price'
-        //     ? getCodesPrices(arrMinMax, content)
-        //     : name === 'area'
-        //         ? getCodesAreas(arrMinMax, content)
-        //         : []
+
         handleSubmit(e, {
             [`${name}Number`]: arrMinMax,
             [name]: `Từ ${convert100ToTarget(min)} - ${convert100ToTarget(max)} ${name === 'price'

@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
-import { Address, Overview } from '../../components'
+import { Address, Overview, Loading, Button } from '../../components'
 import icons from '../../ultils/icons'
 import { apiUploadImages } from '../../services'
+import { getCodesAreas, getCodesPrices } from '../../ultils/Common/getCodes'
+import { useSelector } from 'react-redux'
 
 const { BsFillCameraFill } = icons
 
@@ -22,10 +24,12 @@ const CreatePost = () => {
         province: ''
     })
     const [imagesPreview, setImagesPreview] = useState([])
-    // console.log(payload);
+    const [isLoading, setIsLoading] = useState(false)
+    const { prices, areas } = useSelector(state => state.app)
 
     const handleFiles = async (e) => {
         e.stopPropagation()
+        setIsLoading(true)
         let images = []
         const files = e.target.files
         const formData = new FormData()
@@ -35,8 +39,27 @@ const CreatePost = () => {
             const response = await apiUploadImages(formData)
             if (response.status === 200) images = [...images, response?.data?.secure_url]
         }
-        setImagesPreview(images)
-        setPayload(prev => ({ ...prev, images: JSON.stringify(images) }))
+        setImagesPreview(prev => [...prev, ...images])
+        setPayload(prev => ({ ...prev, images: [...prev.images, ...images] }))
+        setIsLoading(false)
+    }
+
+    const handleDeleteImage = (image) => {
+        setImagesPreview(prev => prev?.filter(item => item !== image))
+        setPayload(prev => ({ ...prev, images: prev.images.filter(item => item !== image) }))
+    }
+
+    const handleSubmit = () => {
+        let priceCodeArr = getCodesPrices(+payload.priceNumber, prices, 1, 15)
+        let priceCode = priceCodeArr[0]?.code
+        let areaCodeArr = getCodesAreas(+payload.areaNumber, areas, 0, 90)
+        let areaCode = areaCodeArr[0]?.code
+        let finalPayload = {
+            ...payload,
+            priceCode,
+            areaCode
+        }
+        console.log(finalPayload)
     }
 
     return (
@@ -54,8 +77,10 @@ const CreatePost = () => {
                                 htmlFor="file"
                                 className='w-full border-2 flex flex-col items-center justify-center gap-4 border-dashed h-[200px] rounded-md border-gray-400 my-4'
                             >
-                                <BsFillCameraFill size={50} />
-                                Thêm ảnh
+                                {isLoading ? <Loading /> : <div className='flex flex-col items-center justify-center'>
+                                    <BsFillCameraFill size={50} />
+                                    Thêm ảnh
+                                </div>}
                             </label>
                             <input onChange={handleFiles} type="file" id='file' hidden multiple />
                             <div className='w-full'>
@@ -63,17 +88,28 @@ const CreatePost = () => {
                                 <div className='flex gap-4 items-center'>
                                     {imagesPreview?.map(item => {
                                         return (
-                                            <img key={item} src={item} alt="preview" className='w-1/3 h-1/3 object-cover rounded-md' />
+                                            <div key={item} className='relative w-1/3 h-1/3'>
+                                                <img src={item} alt="preview" className='w-full h-full object-cover rounded-md' />
+                                                <div
+                                                    className='absolute top-0 right-0 w-8 h-8 font-semibold text-lg bg-gray-200 hover:bg-gray-400 cursor-pointer rounded-full flex items-center justify-center'
+                                                    title='Xóa'
+                                                    onClick={() => handleDeleteImage(item)}
+                                                >
+                                                    x
+                                                </div>
+                                            </div>
                                         )
                                     })}
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <Button onClick={handleSubmit} text='Tạo mới' bgColor='bg-green-600' textColor='text-white' />
                     <div className='h-[500px]'></div>
                 </div>
                 <div className='w-1/3 flex-none'>
                     map
+                    <Loading />
                 </div>
 
             </div>

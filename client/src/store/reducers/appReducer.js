@@ -2,6 +2,7 @@ import actionTypes from "../actions/actionTypes";
 const initState = {
     categories: [],
     prices: [],
+    areas: [],
     provinces: [],
     msg: '',
 }

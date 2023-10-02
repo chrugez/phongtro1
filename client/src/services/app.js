@@ -15,7 +15,7 @@ export const apiGetPrices = () => new Promise(async (resolve, reject) => {
 
 export const apiGetAreas = () => new Promise(async (resolve, reject) => {
     try {
-        const response = await axiosDefault({
+        const response = await axios({
             method: 'get',
             url: '/api/v1/area/all'
         })
