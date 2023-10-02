@@ -2,7 +2,7 @@ import React, { memo, useEffect, useState } from 'react'
 import { Select, InputReadOnly } from '../components'
 import { apiGetPublicProvinces, apiGetPublicDistrict } from '../services'
 
-const Address = () => {
+const Address = ({ payload, setPayload }) => {
 
     const [provinces, setProvinces] = useState([])
     const [districts, setDistricts] = useState([])
@@ -35,7 +35,14 @@ const Address = () => {
         !province && setDistricts([])
     }, [province])
 
-    // console.log({ province, district });
+    useEffect(() => {
+        setPayload(prev => ({
+            ...prev,
+            address: `${district ? `${districts.find(item => item.district_id === district)?.district_name}, ` : ''} ${province ? provinces.find(item => item.province_id === province)?.province_name : ''}`,
+            province: `${province ? provinces.find(item => item.province_id === province)?.province_name : ''}`
+        }))
+    }, [province, district])
+
     return (
         <div>
             <h2 className='font-semibold text-xl py-4'>Địa chỉ cho thuê</h2>
