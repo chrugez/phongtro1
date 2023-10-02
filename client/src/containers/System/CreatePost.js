@@ -25,7 +25,8 @@ const CreatePost = () => {
     })
     const [imagesPreview, setImagesPreview] = useState([])
     const [isLoading, setIsLoading] = useState(false)
-    const { prices, areas } = useSelector(state => state.app)
+    const { prices, areas, categories, provinces } = useSelector(state => state.app)
+    const { currentData } = useSelector(state => state.user)
 
     const handleFiles = async (e) => {
         e.stopPropagation()
@@ -50,14 +51,18 @@ const CreatePost = () => {
     }
 
     const handleSubmit = () => {
-        let priceCodeArr = getCodesPrices(+payload.priceNumber, prices, 1, 15)
+        let priceCodeArr = getCodesPrices(+payload.priceNumber / Math.pow(10, 6), prices, 1, 15)
         let priceCode = priceCodeArr[0]?.code
         let areaCodeArr = getCodesAreas(+payload.areaNumber, areas, 0, 90)
         let areaCode = areaCodeArr[0]?.code
         let finalPayload = {
             ...payload,
             priceCode,
-            areaCode
+            areaCode,
+            userId: currentData?.id,
+            priceNumber: +payload.priceNumber / Math.pow(10, 6),
+            target: payload.target || 'Tất cả',
+            label: `${categories?.find(item => item.code === payload?.categoryCode)?.value} ${payload?.address.split(',')[0]}`
         }
         console.log(finalPayload)
     }
