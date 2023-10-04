@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { Address, Overview, Loading, Button } from '../../components'
 import icons from '../../ultils/icons'
-import { apiUploadImages } from '../../services'
+import { apiUploadImages, apiCreateNewPost } from '../../services'
 import { getCodesAreas, getCodesPrices } from '../../ultils/Common/getCodes'
 import { useSelector } from 'react-redux'
+import Swal from 'sweetalert2'
+import { validate } from '../../ultils/Common/validateFilelds'
 
 const { BsFillCameraFill } = icons
 
@@ -25,8 +27,9 @@ const CreatePost = () => {
     })
     const [imagesPreview, setImagesPreview] = useState([])
     const [isLoading, setIsLoading] = useState(false)
-    const { prices, areas, categories, provinces } = useSelector(state => state.app)
+    const { prices, areas, categories } = useSelector(state => state.app)
     const { currentData } = useSelector(state => state.user)
+    const [invalidFields, setInvalidFields] = useState([])
 
     const handleFiles = async (e) => {
         e.stopPropagation()
@@ -50,7 +53,7 @@ const CreatePost = () => {
         setPayload(prev => ({ ...prev, images: prev.images.filter(item => item !== image) }))
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         let priceCodeArr = getCodesPrices(+payload.priceNumber / Math.pow(10, 6), prices, 1, 15)
         let priceCode = priceCodeArr[0]?.code
         let areaCodeArr = getCodesAreas(+payload.areaNumber, areas, 0, 90)
@@ -64,7 +67,31 @@ const CreatePost = () => {
             target: payload.target || 'Tất cả',
             label: `${categories?.find(item => item.code === payload?.categoryCode)?.value} ${payload?.address.split(',')[0]}`
         }
-        console.log(finalPayload)
+        const result = validate(finalPayload, setInvalidFields)
+        if (result === 0) {
+            const response = await apiCreateNewPost(finalPayload)
+            if (response?.data.err === 0) {
+                Swal.fire('Thành công', 'Đã thêm bài đăng mới', 'success').then(() => {
+                    setPayload({
+                        categoryCode: '',
+                        title: '',
+                        priceNumber: 0,
+                        areaNumber: 0,
+                        images: '',
+                        address: '',
+                        priceCode: '',
+                        areaCode: '',
+                        description: '',
+                        target: '',
+                        province: ''
+                    })
+                    setImagesPreview([])
+                })
+            } else {
+                Swal.fire('Oops!', 'Có lỗi gí đó', 'error')
+            }
+        }
+
     }
 
     return (
@@ -72,8 +99,8 @@ const CreatePost = () => {
             <h1 className='text-3xl font-medium py-4 border-b border-gray-200'>Đăng tin mới</h1>
             <div className='flex flex-auto gap-4'>
                 <div className='py-4 flex flex-col gap-8 flex-auto'>
-                    <Address payload={payload} setPayload={setPayload} />
-                    <Overview payload={payload} setPayload={setPayload} />
+                    <Address invalidFields={invalidFields} setInvalidFields={setInvalidFields} payload={payload} setPayload={setPayload} />
+                    <Overview invalidFields={invalidFields} setInvalidFields={setInvalidFields} payload={payload} setPayload={setPayload} />
                     <div>
                         <h2 className='font-semibold text-xl py-4'>Hình ảnh</h2>
                         <small>Cập nhật hình ảnh rõ ràng sẽ cho thuê nhanh hơn</small>
@@ -88,6 +115,9 @@ const CreatePost = () => {
                                 </div>}
                             </label>
                             <input onChange={handleFiles} type="file" id='file' hidden multiple />
+                            <small className='text-red-500 block w-full'>
+                                {invalidFields?.some(item => item.name === 'images') && invalidFields?.find(item => item.name === 'images')?.message}
+                            </small>
                             <div className='w-full'>
                                 <h3 className='font-medium'>Ảnh đã chọn</h3>
                                 <div className='flex gap-4 items-center'>

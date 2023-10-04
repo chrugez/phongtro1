@@ -38,6 +38,9 @@ export const getPostsLimitService = (page, query, { priceNumber, areaNumber }) =
             raw: true,
             nest: true,
             offset: offset * +process.env.LIMIT,
+            order: [
+                ['createdAt', 'DESC'],
+            ],
             limit: +process.env.LIMIT,
             include: [
                 { model: db.Image, as: 'images', attributes: ['image'] },
@@ -82,7 +85,7 @@ export const getNewPostService = () => new Promise(async (resolve, reject) => {
     }
 })
 
-export const createNewPostService = ({ body, userId }) => new Promise(async (resolve, reject) => {
+export const createNewPostService = (body, userId) => new Promise(async (resolve, reject) => {
     try {
         const attributeId = generateId()
         const imagesId = generateId()
@@ -97,20 +100,20 @@ export const createNewPostService = ({ body, userId }) => new Promise(async (res
             address: body.address || null,
             attributeId,
             categoryCode: body.categoryCode,
-            description: body.description || null,
+            description: JSON.stringify(body.description) || null,
             userId,
             overviewId,
             imagesId,
             areaCode: body.areaCode || null,
             priceCode: body.priceCode || null,
-            provinceCode: body.provinceCode || null,
+            provinceCode: body?.province?.includes('Thành phố') ? generateCode(body?.province?.replace('Thành phố ', '')) : generateCode(body?.province?.replace('Tỉnh ', '')) || null,
             priceNumber: body.priceNumber,
             areaNumber: body.areaNumber
         })
         await db.Attribute.create({
             id: attributeId,
-            price: +priceNumber < 1 ? `${+priceNumber * 1000000} đồng/tháng` : `${priceNumber} triệu/tháng`,
-            acreage: `${areaNumber} m2`,
+            price: +body.priceNumber < 1 ? `${+body.priceNumber * 1000000} đồng/tháng` : `${body.priceNumber} triệu/tháng`,
+            acreage: `${body.areaNumber} m2`,
             published: moment(new Date).format('DD/MM/YYYY'),
             hashtag,
         })
@@ -136,8 +139,8 @@ export const createNewPostService = ({ body, userId }) => new Promise(async (res
                 ]
             },
             default: {
-                code: body?.province?.include('Thành phố') ? generateCode(body?.province?.replace('Thành phố ', '')) : generateCode(body?.province?.replace('Tỉnh ', '')),
-                value: body?.province?.include('Thành phố') ? body?.province?.replace('Thành phố ', '') : body?.province?.replace('Tỉnh ', '')
+                code: body?.province?.includes('Thành phố') ? generateCode(body?.province?.replace('Thành phố ', '')) : generateCode(body?.province?.replace('Tỉnh ', '')),
+                value: body?.province?.includes('Thành phố') ? body?.province?.replace('Thành phố ', '') : body?.province?.replace('Tỉnh ', '')
             }
         })
         await db.Label.findOrCreate({
@@ -146,13 +149,12 @@ export const createNewPostService = ({ body, userId }) => new Promise(async (res
             },
             default: {
                 code: labelCode,
-                value: body?.label
+                value: body.label
             }
         })
         resolve({
             err: 0,
             msg: 'OK',
-            response
         })
     } catch (error) {
         reject(error)
