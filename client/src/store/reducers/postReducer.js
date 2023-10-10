@@ -3,6 +3,7 @@ const initState = {
     posts: [],
     newPosts: [],
     postOfCurrent: [],
+    dataEdit: {},
     msg: '',
     count: 0
 }
@@ -27,6 +28,12 @@ const postReducer = (state = initState, action) => {
             return {
                 ...state,
                 postOfCurrent: action.posts || [],
+                msg: action.msg || '',
+            }
+        case actionTypes.EDIT_DATA:
+            return {
+                ...state,
+                dataEdit: action.dataEdit || {},
                 msg: action.msg || '',
             }
         default:
