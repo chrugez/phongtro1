@@ -2,6 +2,7 @@ import actionTypes from "../actions/actionTypes";
 const initState = {
     posts: [],
     newPosts: [],
+    postOfCurrent: [],
     msg: '',
     count: 0
 }
@@ -20,6 +21,12 @@ const postReducer = (state = initState, action) => {
             return {
                 ...state,
                 newPosts: action.newPosts || [],
+                msg: action.msg || '',
+            }
+        case actionTypes.GET_POSTS_ADMIN:
+            return {
+                ...state,
+                postOfCurrent: action.posts || [],
                 msg: action.msg || '',
             }
         default:
