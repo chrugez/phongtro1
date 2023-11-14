@@ -7,11 +7,15 @@ import { Button, UpdatePost } from '../../components'
 const ManagePost = () => {
     const dispatch = useDispatch()
     const [isEdit, setIsEdit] = useState(false)
-    const [dataEdit, setDataEdit] = useState({})
-    const { postOfCurrent } = useSelector(state => state.post)
+    const { postOfCurrent, dataEdit } = useSelector(state => state.post)
+
     useEffect(() => {
         dispatch(actions.getPostsLimitAdmin())
     }, [])
+
+    useEffect(() => {
+        !dataEdit && setIsEdit(false)
+    }, [dataEdit])
 
     return (
         <div className='flex flex-col gap-6 '>
@@ -74,7 +78,7 @@ const ManagePost = () => {
                         })}
                 </tbody>
             </table>
-            {isEdit && <UpdatePost dataEdit={dataEdit} setIsEdit={setIsEdit} />}
+            {isEdit && <UpdatePost setIsEdit={setIsEdit} />}
         </div>
     )
 }

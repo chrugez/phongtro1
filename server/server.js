@@ -7,7 +7,7 @@ import connectDB from './src/config/connectDB'
 const app = express()
 app.use(cors({
     origin: process.env.CLIENT_URL,
-    methods: ["POST", "GET", "PUSH", 'DELETE']
+    methods: ["POST", "GET", "PUT", 'DELETE']
 }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
