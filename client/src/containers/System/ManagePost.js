@@ -3,19 +3,50 @@ import { useDispatch, useSelector } from 'react-redux'
 import * as actions from '../../store/actions'
 import { checkStatus } from '../../ultils/Common/checkStatus'
 import { Button, UpdatePost } from '../../components'
+import { apiDeletePost } from '../../services'
+import Swal from 'sweetalert2'
 
 const ManagePost = () => {
     const dispatch = useDispatch()
     const [isEdit, setIsEdit] = useState(false)
+    const [updateData, setUpdateData] = useState(false)
     const { postOfCurrent, dataEdit } = useSelector(state => state.post)
 
     useEffect(() => {
-        dispatch(actions.getPostsLimitAdmin())
-    }, [])
+        !dataEdit && dispatch(actions.getPostsLimitAdmin())
+    }, [dataEdit, updateData])
 
     useEffect(() => {
         !dataEdit && setIsEdit(false)
     }, [dataEdit])
+
+    const handleDeletePost = async (postId) => {
+        console.log(postId);
+        Swal.fire({
+            title: "Bạn chắc chứ?",
+            text: "Bạn sẽ không thể hoàn tác tin đăng!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Đồng ý, xóa!",
+            cancelButtonText: "Thoát",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const response = await apiDeletePost(postId)
+                if (response?.data?.err === 0) {
+                    setUpdateData(prev => !prev)
+                } else {
+                    Swal.fire('Oops!', 'Xóa tin đăng thất bại', 'error')
+                }
+                Swal.fire({
+                    title: "Xóa thành công!",
+                    text: "Bài đăng đã được xóa!",
+                    icon: "success"
+                });
+            }
+        });
+    }
 
     return (
         <div className='flex flex-col gap-6 '>
@@ -71,6 +102,7 @@ const ManagePost = () => {
                                             text='Xóa'
                                             bgColor='bg-red-600'
                                             textColor='text-white'
+                                            onClick={() => handleDeletePost(item.id)}
                                         />
                                     </td>
                                 </tr>

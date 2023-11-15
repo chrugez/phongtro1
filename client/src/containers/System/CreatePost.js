@@ -23,7 +23,7 @@ const CreatePost = ({ isEdit }) => {
             address: dataEdit?.address || '',
             priceCode: dataEdit?.priceCode || '',
             areaCode: dataEdit?.areaCode || '',
-            description: dataEdit?.description ? JSON.parse() : '',
+            description: dataEdit?.description ? JSON.parse(dataEdit?.description) : '',
             target: dataEdit?.overview?.target || '',
             province: dataEdit?.province || ''
         }
