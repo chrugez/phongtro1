@@ -1,16 +1,19 @@
 import React, { memo } from 'react'
 
-const InputReadOnly = ({ label, value }) => {
+const InputReadOnly = ({ label, value, direction, editPhone }) => {
     return (
-        <div>
-            <label htmlFor="exactly-address" className='font-medium'>{label}</label>
-            <input
-                type="text"
-                id='exactly-address'
-                readOnly
-                className='border border-gray-200 rounded-md bg-gray-100 outline-none p-2 w-full'
-                value={value || ''}
-            />
+        <div className={`flex ${direction ? direction : 'flex-col gap-2'} `}>
+            <label htmlFor="exactly-address" className='font-medium w-48 flex-none'>{label}</label>
+            <div className='flex-auto'>
+                <input
+                    type="text"
+                    id='exactly-address'
+                    readOnly
+                    className='border border-gray-200 rounded-md bg-gray-100 outline-none p-2 w-full'
+                    value={value || ''}
+                />
+                {editPhone && <small className='text-blue-500 py-4 cursor-pointer'>Đổi số điện thoại</small>}
+            </div>
         </div>
     )
 }

@@ -1,6 +1,7 @@
 import React, { memo } from 'react'
 import { useSelector } from 'react-redux'
 import noAvatar from '../assets/no-avatar.png'
+import { blobToBase64 } from '../ultils/Common/tobase64'
 
 const User = () => {
 
@@ -9,7 +10,7 @@ const User = () => {
     return (
         <div className='flex items-center gap-2'>
             <img
-                src={currentData?.avatar || noAvatar}
+                src={blobToBase64(currentData?.avatar) || noAvatar}
                 alt="avatar"
                 className='h-12 w-12 rounded-full object-cover border-2 border-white shadow-md'
             />

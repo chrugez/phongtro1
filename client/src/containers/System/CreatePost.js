@@ -29,7 +29,7 @@ const CreatePost = ({ isEdit }) => {
         }
         return initData
     })
-    console.log(dataEdit);
+    // console.log(dataEdit);
     const dispatch = useDispatch()
     const [imagesPreview, setImagesPreview] = useState([])
     const [isLoading, setIsLoading] = useState(false)

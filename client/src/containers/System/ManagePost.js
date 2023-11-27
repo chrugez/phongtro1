@@ -10,11 +10,17 @@ const ManagePost = () => {
     const dispatch = useDispatch()
     const [isEdit, setIsEdit] = useState(false)
     const [updateData, setUpdateData] = useState(false)
+    const [posts, setPosts] = useState([])
+    const [status, setStatus] = useState('')
     const { postOfCurrent, dataEdit } = useSelector(state => state.post)
 
     useEffect(() => {
         !dataEdit && dispatch(actions.getPostsLimitAdmin())
     }, [dataEdit, updateData])
+
+    useEffect(() => {
+        setPosts(postOfCurrent)
+    }, [postOfCurrent])
 
     useEffect(() => {
         !dataEdit && setIsEdit(false)
@@ -48,12 +54,26 @@ const ManagePost = () => {
         });
     }
 
+    useEffect(() => {
+        if (status === 1) {
+            const activePost = postOfCurrent?.filter(item => checkStatus((item?.overview?.expired?.split(' ')[3])))
+            setPosts(activePost)
+        } else if (status === 2) {
+            const expried = postOfCurrent?.filter(item => !checkStatus((item?.overview?.expired?.split(' ')[3])))
+            setPosts(expried)
+        } else {
+            setPosts(postOfCurrent)
+        }
+    }, [status])
+
     return (
         <div className='flex flex-col gap-6 '>
             <div className='py-4 border-b border-gray-200 flex justify-between items-center'>
                 <h1 className='text-3xl font-medium '>Quản lý tin đăng </h1>
-                <select className='outline-none border p-2 border-gray-200 rounded-md'>
-                    <option value="">Lọc theo trạng thái</option>
+                <select onChange={e => setStatus(+e.target.value)} value={status} className='outline-none border p-2 border-gray-200 rounded-md'>
+                    <option value="0">Lọc theo trạng thái</option>
+                    <option value="1">Đang hoạt động</option>
+                    <option value="2">Đã hết hạn</option>
                 </select>
             </div>
             <table className='w-full'>
@@ -70,9 +90,9 @@ const ManagePost = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {!postOfCurrent
+                    {!posts
                         ? <tr><td >Bạn chưa có tin đăng nào.</td></tr>
-                        : postOfCurrent?.map(item => {
+                        : posts?.map(item => {
                             return (
                                 <tr className='flex h-16' key={item.id}>
                                     <td className='border h-full flex-1 flex items-center justify-center p-2'>{item?.overview?.code}</td>

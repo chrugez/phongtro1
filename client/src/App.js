@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
-import { Login, Home, Rental, HomePage, DetailPost, SearchDetail } from "./containers/Public";
+import { Login, Home, Rental, HomePage, DetailPost, SearchDetail, Contact } from "./containers/Public";
 import { path } from './ultils/constant'
-import { System, CreatePost, ManagePost } from "./containers/System";
+import { System, CreatePost, ManagePost, EditAccount } from "./containers/System";
 import * as actions from './store/actions'
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -35,11 +35,13 @@ function App() {
           <Route path={path.NHA_CHO_THUE} element={<Rental />} />
           <Route path={path.SEARCH} element={<SearchDetail />} />
           <Route path={path.DETAIL_POST__TITLE__POSTID} element={<DetailPost />} />
+          <Route path={path.CONTACT} element={<Contact />} />
           <Route path={'chi-tiet/*'} element={<DetailPost />} />
         </Route>
         <Route path={path.SYSTEM} element={<System />}>
           <Route path={path.CREATE_POST} element={<CreatePost />} />
           <Route path={path.MANAGE_POST} element={<ManagePost />} />
+          <Route path={path.EDIT_ACCOUNT} element={<EditAccount />} />
         </Route>
 
       </Routes>
