@@ -183,8 +183,8 @@ const CreatePost = ({ isEdit }) => {
                     <div className='h-[500px]'></div>
                 </div>
                 <div className='w-1/3 flex-none'>
-                    map
-                    <Loading />
+                    {/* map
+                    <Loading /> */}
                 </div>
 
             </div>

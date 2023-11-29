@@ -69,3 +69,19 @@ input[type="range"]::-ms-thumb {
 input[type="range"]::-ms-thumb:active {
     border: solid 1px rgb(70, 70, 245);
 }
+
+button.slick-arrow::before{
+    font-size: 48px !important;
+    color: rgb(169, 143, 27) !important;
+} 
+
+.slick-next{
+    right: 35px !important;
+    top: 45% !important;
+}
+
+.slick-prev{
+    left: 10px !important;
+    z-index: 10 !important;
+    top: 45% !important;
+}
